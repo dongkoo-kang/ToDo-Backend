@@ -109,7 +109,16 @@ router.put('/:id', async (req, res) => {
     const { title, completed, priority, dueDate } = req.body;
     
     const updateData = {};
-    if (title !== undefined) updateData.title = title.trim();
+    if (title !== undefined) {
+      // title이 문자열인지 확인하고 빈 문자열 검증
+      if (typeof title !== 'string' || title.trim() === '') {
+        return res.status(400).json({
+          success: false,
+          message: '할일 제목은 필수이며 비어있을 수 없습니다.'
+        });
+      }
+      updateData.title = title.trim();
+    }
     if (completed !== undefined) updateData.completed = completed;
     if (priority !== undefined) updateData.priority = priority;
     if (dueDate !== undefined) {
