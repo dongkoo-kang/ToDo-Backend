@@ -32,6 +32,7 @@ app.get('/health', (req, res) => {
 
 // Todo 라우트
 app.use('/api/todos', todoRoutes);
+app.use('/todos', todoRoutes); // /todos 경로도 지원
 
 // MongoDB 연결
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/todo';
