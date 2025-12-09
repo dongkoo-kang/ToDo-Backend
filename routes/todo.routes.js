@@ -73,12 +73,15 @@ router.post('/', async (req, res) => {
     
     // dueDate를 Date 객체로 변환 (문자열인 경우)
     let dueDateValue = null;
-    if (dueDate && dueDate.trim() !== '') {
+    if (dueDate && typeof dueDate === 'string' && dueDate.trim() !== '') {
       dueDateValue = new Date(dueDate);
       // 유효한 날짜인지 확인
       if (isNaN(dueDateValue.getTime())) {
         dueDateValue = null;
       }
+    } else if (dueDate && dueDate instanceof Date) {
+      // 이미 Date 객체인 경우
+      dueDateValue = isNaN(dueDate.getTime()) ? null : dueDate;
     }
     
     const todo = new Todo({
@@ -123,10 +126,13 @@ router.put('/:id', async (req, res) => {
     if (priority !== undefined) updateData.priority = priority;
     if (dueDate !== undefined) {
       // dueDate를 Date 객체로 변환 (문자열인 경우)
-      if (dueDate && dueDate.trim() !== '') {
+      if (dueDate && typeof dueDate === 'string' && dueDate.trim() !== '') {
         const dueDateValue = new Date(dueDate);
         // 유효한 날짜인지 확인
         updateData.dueDate = isNaN(dueDateValue.getTime()) ? null : dueDateValue;
+      } else if (dueDate && dueDate instanceof Date) {
+        // 이미 Date 객체인 경우
+        updateData.dueDate = isNaN(dueDate.getTime()) ? null : dueDate;
       } else {
         updateData.dueDate = null;
       }
